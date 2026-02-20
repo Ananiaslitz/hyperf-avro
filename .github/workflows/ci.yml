@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }} — Tests & Static Analysis
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: ["8.1", "8.2", "8.3"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: swoole, json
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit --testdox
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse src --level=5 --no-progress

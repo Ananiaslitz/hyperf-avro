@@ -1,0 +1,14 @@
+services:
+  hyperf-avro:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hyperf-avro
+    volumes:
+      - ./:/opt/www
+      - vendor_data:/opt/www/vendor
+    working_dir: /opt/www
+    command: sh -c "composer config -g --unset repos.packagist; php -d memory_limit=-1 /usr/local/bin/composer install --no-dev -o --ignore-platform-reqs && php tests/example_usage.php"
+
+volumes:
+  vendor_data:
