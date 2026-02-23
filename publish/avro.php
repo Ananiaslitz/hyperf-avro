@@ -17,5 +17,6 @@ return [
         'ssl_verify' => (bool) env('SCHEMA_REGISTRY_SSL_VERIFY', true),
         'connect_timeout' => (int) env('SCHEMA_REGISTRY_CONNECT_TIMEOUT', 5),
         'timeout' => (int) env('SCHEMA_REGISTRY_TIMEOUT', 10),
+        'subject_cache_ttl' => (int) env('SCHEMA_REGISTRY_SUBJECT_CACHE_TTL', 300),
     ],
 ];

@@ -8,6 +8,7 @@ use Ananiaslitz\HyperfAvro\Aspect\AvroDeserializeAspect;
 use Ananiaslitz\HyperfAvro\Aspect\AvroSerializeAspect;
 use Ananiaslitz\HyperfAvro\Contract\SchemaRegistryInterface;
 use Ananiaslitz\HyperfAvro\Factory\ConfluentSchemaRegistryFactory;
+use Ananiaslitz\HyperfAvro\Factory\KafkaAvroSerializerFactory;
 
 class ConfigProvider
 {
@@ -17,7 +18,7 @@ class ConfigProvider
             'dependencies' => [
                 SchemaManager::class => SchemaManager::class,
                 AvroSerializer::class => AvroSerializer::class,
-                KafkaAvroSerializer::class => KafkaAvroSerializer::class,
+                KafkaAvroSerializer::class => KafkaAvroSerializerFactory::class,
                 SchemaRegistryInterface::class => ConfluentSchemaRegistryFactory::class,
             ],
             'aspects' => [

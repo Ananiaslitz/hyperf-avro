@@ -2,3 +2,7 @@ parameters:
     level: 5
     paths:
         - src
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # Hyperf annotations are not always recognized by PHPStan
+        - '#Property .* has no typeSpecified#'
