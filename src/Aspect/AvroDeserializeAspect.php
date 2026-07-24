@@ -34,14 +34,24 @@ class AvroDeserializeAspect extends AbstractAspect
         /** @var AvroDeserialize $annotation */
         $annotation = $proceedingJoinPoint->getAnnotationMetadata()->method[AvroDeserialize::class];
 
-        if (isset($arguments[0]) && is_string($arguments[0])) {
-            $decoded = $this->serializer->decode($arguments[0]);
+        $argIndex = $annotation->argIndex;
+
+        if (isset($arguments[$argIndex]) && is_string($arguments[$argIndex])) {
+            $decoded = $this->serializer->decode($arguments[$argIndex]);
 
             if ($annotation->targetClass && class_exists($annotation->targetClass)) {
-                $decoded = new $annotation->targetClass(...$decoded);
+                $targetClass = $annotation->targetClass;
+                if ($annotation->factoryMethod && method_exists($targetClass, $annotation->factoryMethod)) {
+                    $factory = $annotation->factoryMethod;
+                    $decoded = $targetClass::$factory($decoded);
+                } elseif (method_exists($targetClass, 'fromArray')) {
+                    $decoded = $targetClass::fromArray($decoded);
+                } else {
+                    $decoded = new $targetClass(...$decoded);
+                }
             }
 
-            $proceedingJoinPoint->arguments['keys'][0] = $decoded;
+            $proceedingJoinPoint->arguments['keys'][$argIndex] = $decoded;
         }
 
         return $proceedingJoinPoint->process();

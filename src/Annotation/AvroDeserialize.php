@@ -12,7 +12,9 @@ class AvroDeserialize extends AbstractAnnotation
 {
     public function __construct(
         public string $schema,
-        public ?string $targetClass = null
+        public ?string $targetClass = null,
+        public int $argIndex = 0,
+        public ?string $factoryMethod = null,
     ) {
     }
 }
