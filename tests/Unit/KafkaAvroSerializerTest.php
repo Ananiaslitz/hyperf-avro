@@ -166,4 +166,17 @@ class KafkaAvroSerializerTest extends TestCase
 
         $this->assertSame(0, $callCount, 'getSchemaById should not be called — schema was seeded by encode');
     }
+
+    public function testClearCacheAndFlushSubjectCache(): void
+    {
+        $binary = $this->kafka->encode(['id' => 1, 'username' => 'a', 'email' => 'a@a.com'], 'user');
+        $this->assertNotEmpty($binary);
+
+        $this->kafka->flushSubjectCache('user');
+        $this->kafka->clearCache();
+
+        // After clearing cache, re-encoding works fine
+        $binary2 = $this->kafka->encode(['id' => 2, 'username' => 'b', 'email' => 'b@b.com'], 'user');
+        $this->assertNotEmpty($binary2);
+    }
 }

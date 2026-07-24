@@ -73,6 +73,27 @@ class KafkaAvroSerializer
     }
 
     /**
+     * Clear all cached schemas (both by ID and by Subject).
+     */
+    public function clearCache(): void
+    {
+        $this->schemaById = [];
+        $this->schemaBySubject = [];
+    }
+
+    /**
+     * Flush subject schema cache. If $subject is provided, flushes only that subject cache.
+     */
+    public function flushSubjectCache(?string $subject = null): void
+    {
+        if ($subject !== null) {
+            unset($this->schemaBySubject[$subject]);
+        } else {
+            $this->schemaBySubject = [];
+        }
+    }
+
+    /**
      * Resolve the latest schema for a subject, using the TTL-based cache.
      *
      * @return array{id: int, schema: AvroSchema}
